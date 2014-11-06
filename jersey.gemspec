@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Jersey::VERSION
   spec.authors       = ["csquared"]
   spec.email         = ["christopher.continanza@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Write APIs in the New Jersey Style}
+  spec.description   = %q{Set of composable middleware and helpers for production sinatra APIs}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "sinatra"
   spec.add_dependency 'sinatra-contrib'
+  spec.add_dependency 'env-conf'
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
 end

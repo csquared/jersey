@@ -3,7 +3,7 @@ ENV['RACK_ENV'] = 'test'
 
 # Requies all the Gems
 require_relative '../lib/jersey'
-require 'rack/test'
+Jersey.setup
 
 # require test runner
 require 'minitest/autorun'
