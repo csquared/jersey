@@ -8,4 +8,3 @@ require 'jersey/setup'
 require 'jersey/api'
 require 'jersey/base'
 require 'jersey/time'
-

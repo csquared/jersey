@@ -1,4 +1,7 @@
 module Jersey::Middleware
+  # Logs request info using the configured logger or the Jersey singleton
+  #
+  # Adds request_id to the default logger params
   class RequestLogger
     def initialize(app, options={})
       @app = app
@@ -6,11 +9,11 @@ module Jersey::Middleware
     end
 
     def call(env)
+      @logger << {request_id: env['REQUEST_ID']} if env['REQUEST_ID']
       @request_start = Time.now
       request = Rack::Request.new(env)
       @logger.log(
         at:              "start",
-        request_id:      env['REQUEST_ID'],
         method:          request.request_method,
         path:            request.path_info
       )
@@ -22,9 +25,9 @@ module Jersey::Middleware
         status:          status,
         'size#bytes' =>  headers['Content-Length'] || reaponse.size,
         route_signature: env['ROUTE_SIGNATURE'],
-        request_id:      env['REQUEST_ID'],
         elapsed:         (Time.now - @request_start).to_f
       )
+      @logger.reset!
       [status, headers, response]
     end
   end
