@@ -2,7 +2,7 @@ module Jersey::Middleware
   class RequestLogger
     def initialize(app, options={})
       @app = app
-      @logger = Jersey::LogfmtLogger.new
+      @logger = options[:logger] || Jersey.logger
     end
 
     def call(env)

@@ -1,74 +1,58 @@
+require 'jersey/logfmt_logger'
+
 module Jersey
-  class LogfmtLogger
-    attr_accessor :stream
-
-    def initialize(stream = $stdout, defaults = {})
-      @defaults = defaults
-      @stream = stream
+  module Logging
+    # always log the time
+    module TimedLogger
+      def log(hash = {})
+        super(hash.merge(now: Time.now))
+      end
     end
-
-    def <<(data)
-      @defaults.merge!(data)
-    end
-
-    def log(data, &block)
-      log_to_stream(stream, @defaults.merge(data), &block)
-    end
-
-    private
-
-    def log_to_stream(stream, data, &block)
-      unless block
-        str = unparse(data.merge(now: Time.now))
-        stream.print(str + "\n")
-      else
-        data = data.dup
-        start = Time.now
-        log_to_stream(stream, data.merge(at: "start"))
-        begin
-          res = yield
-          log_to_stream(stream, data.merge(
-            at: "finish", elapsed: (Time.now - start).to_f))
-          res
-        rescue
-          log_to_stream(stream, data.merge(
-            at: "exception", elapsed: (Time.now - start).to_f))
-          raise
+    # only log the first ten lines of a backtrace so error logs
+    # are digestible
+    module ErrorLogger
+      def log(loggable = {})
+        case loggable
+        when Hash
+          super(loggable)
+        when Exception
+          e = loggable
+          super(error: true, id: e.object_id, message: e.message)
+          lineno = 0
+          e.backtrace[0,10].each do |line|
+            lineno += 1
+            super(error: true,
+                  id: e.object_id,
+                  backtrace: line,
+                  line_number: lineno)
+          end
         end
       end
     end
+  end
 
-    def quote_string(k, v)
-      # try to find a quote style that fits
-      if !v.include?('"')
-        %{#{k}="#{v}"}
-      elsif !v.include?("'")
-        %{#{k}='#{v}'}
-      else
-        %{#{k}="#{v.gsub(/"/, '\\"')}"}
-      end
+  class Logger < LogfmtLogger
+    include Logging::TimedLogger
+    include Logging::ErrorLogger
+  end
+
+  module LoggingSingleton
+    def logger
+      @logger ||= Jersey::Logger.new
     end
 
-    def unparse(attrs)
-      attrs.map { |k, v| unparse_pair(k, v) }.compact.join(" ")
+    def stream
+      logger.stream
     end
 
-    def unparse_pair(k, v)
-      v = v.call if v.is_a?(Proc)
-      # only quote strings if they include whitespace
-      if v == nil
-        nil
-      elsif v == true
-        k
-      elsif v.is_a?(Float)
-        "#{k}=#{format("%.3f", v)}"
-      elsif v.is_a?(String) && v =~ /\s/
-        quote_string(k, v)
-      elsif v.is_a?(Time)
-        "#{k}=#{v.iso8601}"
-      else
-        "#{k}=#{v}"
-      end
+    def stream=(other)
+      logger.stream=other
+    end
+
+    def log(loggable = {})
+      logger.log(loggable)
     end
   end
+
+  extend LoggingSingleton
 end

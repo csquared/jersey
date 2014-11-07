@@ -2,9 +2,8 @@ require "sinatra/base"
 require 'sinatra/json'
 require 'json'
 
+# jersey
 require 'jersey/http_errors'
-require 'jersey/log'
-
 require 'jersey/middleware/request_id'
 require 'jersey/middleware/request_logger'
 require 'jersey/extensions/route_signature'
@@ -17,6 +16,7 @@ module Jersey::API
 
     register Jersey::Extensions::RouteSignature
     register Jersey::Extensions::ErrorHandler
+
     use Jersey::Middleware::RequestID
     use Jersey::Middleware::RequestLogger
 
