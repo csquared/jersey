@@ -1,6 +1,21 @@
 # Jersey
 
-TODO: Write a gem description
+![Jersey](http://geology.com/state-map/maps/new-jersey-physical-map.gif)
+
+Because [worse is better](http://en.wikipedia.org/wiki/Worse_is_better).
+
+Jersey is a gem for people who want to write excellent APIs but have their
+own opinions on how to structure their code and projects.
+
+We provide sensible defaults that are composed with sensible pieces, making
+it easy to compose your own stack.
+
+## Usage
+
+Fuggetaboutit!
+
+Coming soon...
+
 
 ## Installation
 
@@ -18,9 +33,6 @@ Or install it yourself as:
 
     $ gem install jersey
 
-## Usage
-
-TODO: Write usage instructions here
 
 ## Contributing
 
