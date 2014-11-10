@@ -1,6 +1,6 @@
 # Jersey
 
-![Jersey](http://geology.com/state-map/maps/new-jersey-physical-map.gif)
+<img src="http://geology.com/state-map/maps/new-jersey-physical-map.gif" height="200px" />
 
 Because [worse is better](http://en.wikipedia.org/wiki/Worse_is_better).
 
