@@ -10,16 +10,10 @@ module Jersey
   end
 
   module LoggingSingleton
+    attr_writer :logger
+
     def logger
       @logger ||= Jersey::Logger.new
-    end
-
-    def stream
-      logger.stream
-    end
-
-    def stream=(other)
-      logger.stream=other
     end
 
     def log(loggable = {})

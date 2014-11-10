@@ -3,18 +3,18 @@ require 'helper'
 class LogTest < UnitTest
   def setup
     super
-    Jersey.stream = StringIO.new
+    Jersey.logger.stream = StringIO.new
   end
 
   def test_log_nothing_logs_time
     Jersey.log()
-    logdata = Logfmt.parse(Jersey.stream.string)
+    logdata = Logfmt.parse(logs)
     assert(logdata['now'], 'must log time')
   end
 
   def test_log_hash
     Jersey.log(foo: 'bar')
-    logdata = Logfmt.parse(Jersey.stream.string)
+    logdata = Logfmt.parse(logs)
     assert_equal('bar', logdata['foo'])
     assert(logdata['now'], 'must log time')
   end
@@ -24,7 +24,7 @@ class LogTest < UnitTest
       raise "boom!"
     rescue => e
       Jersey.log(e)
-      loglines = Jersey.stream.string.lines
+      loglines = logs.lines
       logdata = Logfmt.parse(loglines[0])
       assert_equal('boom!', logdata['message'])
       assert_equal(e.object_id, logdata['id'])

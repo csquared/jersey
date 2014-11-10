@@ -2,17 +2,22 @@ module Jersey
   class BaseLogger
     attr_accessor :stream, :defaults
 
-    def initialize(stream = $stdout, defaults = {})
-      @defaults = defaults
-      @stream = stream
+    def initialize(opts = {})
+      @stream   = opts.fetch(:stream, $stdout)
+      @defaults = opts.fetch(:defaults, {})
     end
 
     def <<(data)
       @defaults.merge!(data)
     end
 
-    def reset!
-      @defaults = {}
+    def reset!(key = nil)
+      if key
+        @defaults.delete(key)
+        @defaults.delete(key.to_sym)
+      else
+        @defaults.clear
+      end
     end
 
     def log(data, &block)

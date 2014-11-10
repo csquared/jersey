@@ -27,7 +27,7 @@ module Jersey::Middleware
         route_signature: env['ROUTE_SIGNATURE'],
         elapsed:         (Time.now - @request_start).to_f
       )
-      @logger.reset!
+      @logger.reset!(:request_id)
       [status, headers, response]
     end
   end
