@@ -19,8 +19,8 @@ module Jersey::API
     register Jersey::Extensions::ErrorHandler
 
     use Rack::Deflater
-    use Rack::ETag
     use Rack::ConditionalGet
+    use Rack::ETag
 
     use Jersey::Middleware::RequestID
     use Jersey::Middleware::RequestLogger
