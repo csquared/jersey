@@ -54,7 +54,6 @@ class API < Jersey::API::Base
 end
 ```
 
-Unified, structured logging with all the info you will wish you had:
 
 ```
 $ curl http://localhost:9292/hello
@@ -67,8 +66,7 @@ at=hello now=2014-11-11T18:04:25+00:00 request_id=2c018557-d246-4b04-a7d7-fc74ba
 at=finish method=GET path=/hello status=200 size#bytes=5 route_signature=/hello elapsed=0.000 request_id=2c018557-d246-4b04-a7d7-fc74bae67ec0 now=2014-11-11T18:04:25+00:00
 ```
 
-Unified, strucutred error handling. Notice how all we needed to do was raise `NotFound`
-and we get a 404 response code and our message as part of the JSON payload.
+Unified, structured logging with all the info you will wish you had:
 
 ```
 $ curl http://localhost:9292/not_found | jq '.'
@@ -94,6 +92,9 @@ Response:
  }
 }
 ```
+
+Unified, strucutred error handling. Notice how all we needed to do was raise `NotFound`
+and we get a 404 response code (in the server logs) and our error message as part of the JSON payload.
 
 #### `Jersey::HTTP::Errors`
 
