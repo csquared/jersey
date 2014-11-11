@@ -29,7 +29,7 @@ class RequestLoggerTest < ApiTest
     assert_equal('GET', logdata['method'])
     assert_equal('/get', logdata['path'])
     assert_equal(200, logdata['status'])
-    assert_equal(2, logdata['size#bytes'])
+    assert_equal(2, logdata['content_length'])
     assert(logdata['now'], 'must log time')
     assert(logdata['elapsed'], 'must log duration')
   end

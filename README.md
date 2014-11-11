@@ -174,6 +174,29 @@ It defaults to using the `Jersey.logger` singleton which is `RequestStore`-aware
 Anything in `RequestStore[:log]` will get appended to the log data. (This is how request ids
 are made available to logger calls outside of HTTP blocks but within HTTP request lifecycles).
 
+Because I think request_ids are important, the logger will try to get them from either the
+`RequestStore` or the `env`.
+
+Logs at request start:
+
+    at:              "start",
+    request_id:      env['REQUEST_ID'],
+    method:          request.request_method,
+    path:            request.path_info,
+    content_type:    request.content_type,
+    content_length:  request.content_length
+
+Logs at request finish:
+
+    at:              "finish",
+    method:          request.request_method,
+    path:            request.path_info,
+    status:          status,
+    content_length:  headers['Content-Length'],
+    route_signature: env['ROUTE_SIGNATURE'],
+    elapsed:         (Time.now - @request_start).to_f,
+    request_id:      env['REQUEST_ID']
+
 
 #### Usage
 Use as a Rack middleware
