@@ -18,12 +18,12 @@ module Jersey::API
     register Jersey::Extensions::RouteSignature
     register Jersey::Extensions::ErrorHandler
 
-    use Jersey::Middleware::RequestID
-    use Jersey::Middleware::RequestLogger
     use Rack::Deflater
-
     use Rack::ETag
     use Rack::ConditionalGet
+
+    use Jersey::Middleware::RequestID
+    use Jersey::Middleware::RequestLogger
 
     helpers Sinatra::JSON
     helpers Jersey::Helpers::Log
