@@ -16,7 +16,7 @@ it easy to compose your own stack or use Jesery's compositions.
   - structured data loggers - json and logfmt
   - unified exception handling
 
-## `Jersey.setup`
+### `Jersey.setup`
 
 Setup embodies a few opinions we have about apps:
 - Having a notion of 'environment' where the configuration lives
@@ -36,7 +36,7 @@ Which is usually included as the first line of code in a library consuming
 Jersey.  For tests, you will want to set `RACK_ENV` to `test` before
 requiring your library that uses the above.
 
-## `Jersey::API::Base`
+### `Jersey::API::Base`
 
 Combines all of the Jersey middleware with a few standard middleware
 from Rack and sinatra-contrib.
@@ -95,7 +95,7 @@ Response:
 }
 ```
 
-### `Jersey::HTTP::Errors`
+#### `Jersey::HTTP::Errors`
 
 Includes Ruby `Error` objects named with camel case for all of the HTTP 4xx and 5xx
 errors. This allows you to raise `NotFound` as an error that has the `STATUS_CODE`
@@ -129,7 +129,7 @@ class API < Sinatra::Base
 end
 ```
 
-### `Jersey::Extensions::RouteSignature`
+#### `Jersey::Extensions::RouteSignature`
 Adds a `ROUTE_SIGNATURE` to the `env` for each request, which is the name of an api endpoint
 as it is *defined* versus the path that reaches your app.
 For example, when you define a route such as ` get "/hello/:id"`, the `ROUTE_SIGNATURE` would
@@ -148,7 +148,7 @@ class API < Sinatra::Base
 end
 ```
 
-### `Jersey::Middleware::RequestID`
+#### `Jersey::Middleware::RequestID`
 
 Creates a random request id for every http request, stored both in thread local storage
 via the `RequestStore` and in the Rack `env`.
@@ -165,7 +165,7 @@ class API < Sinatra::Base
 end
 ```
 
-### `Jersey::Middleware::RequestLogger`
+#### `Jersey::Middleware::RequestLogger`
 
 Logs http start and finish and errors in a structured logging format.
 
