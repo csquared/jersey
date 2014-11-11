@@ -26,6 +26,7 @@ module Jersey
 
     private
     def log_to_stream(stream, data, &block)
+      data.merge!(request_data || {})
       unless block
         str = unparse(data.merge(now: Time.now))
         stream.print(str + "\n")
@@ -48,6 +49,10 @@ module Jersey
 
     def unparse
       raise "Need to subclass and implement #unparse"
+    end
+
+    def request_data
+      RequestStore[:log] if defined? RequestStore
     end
   end
 end

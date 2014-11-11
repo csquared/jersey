@@ -1,6 +1,7 @@
 require "sinatra/base"
 require 'sinatra/json'
 require 'json'
+require 'request_store'
 
 # jersey
 require 'jersey/http_errors'
@@ -19,6 +20,10 @@ module Jersey::API
 
     use Jersey::Middleware::RequestID
     use Jersey::Middleware::RequestLogger
+    use Rack::Deflater
+
+    use Rack::ETag
+    use Rack::ConditionalGet
 
     helpers Sinatra::JSON
     helpers Jersey::Helpers::Log

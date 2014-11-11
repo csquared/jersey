@@ -14,6 +14,8 @@ module Jersey::Middleware
 
       # make ID of the request accessible to consumers down the stack
       env["REQUEST_ID"] = request_ids[0]
+      RequestStore[:log] ||= {}
+      RequestStore[:log][:request_id] = request_ids[0]
 
       # Extract request IDs from incoming headers as well. Can be used for
       # identifying a request across a number of components in SOA.
@@ -25,6 +27,8 @@ module Jersey::Middleware
       headers["Request-Id"] = request_ids[0]
 
       [status, headers, response]
+    ensure
+      RequestStore[:log].delete(:request_id)
     end
 
     private

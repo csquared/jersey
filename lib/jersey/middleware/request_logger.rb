@@ -9,13 +9,13 @@ module Jersey::Middleware
     end
 
     def call(env)
-      @logger << {request_id: env['REQUEST_ID']} if env['REQUEST_ID']
       @request_start = Time.now
       request = Rack::Request.new(env)
       @logger.log(
         at:              "start",
         method:          request.request_method,
-        path:            request.path_info
+        path:            request.path_info,
+        request_id:      env['REQUEST_ID']
       )
       status, headers, response = @app.call(env)
       @logger.log(
@@ -25,7 +25,8 @@ module Jersey::Middleware
         status:          status,
         'size#bytes' =>  headers['Content-Length'] || reaponse.size,
         route_signature: env['ROUTE_SIGNATURE'],
-        elapsed:         (Time.now - @request_start).to_f
+        elapsed:         (Time.now - @request_start).to_f,
+        request_id:      env['REQUEST_ID']
       )
       @logger.reset!(:request_id)
       [status, headers, response]
