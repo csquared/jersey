@@ -6,6 +6,13 @@ class LogTest < UnitTest
     Jersey.logger.stream = StringIO.new
   end
 
+  def test_log_json
+    logger = Jersey::JSONLogger.new(stream: StringIO.new)
+    logger.log(foo: "bar")
+    logdata = JSON.parse(logger.stream.string)
+    assert_equal('bar', logdata['foo'])
+  end
+
   def test_log_nothing_logs_time
     Jersey.log()
     logdata = Logfmt.parse(logs)

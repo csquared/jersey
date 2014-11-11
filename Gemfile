@@ -7,4 +7,5 @@ group :test do
   gem 'minitest'
   gem 'rack-test', require: 'rack/test'
   gem 'logfmt'
+  gem 'puma'
 end

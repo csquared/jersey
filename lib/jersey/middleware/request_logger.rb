@@ -23,7 +23,7 @@ module Jersey::Middleware
         method:          request.request_method,
         path:            request.path_info,
         status:          status,
-        'size#bytes' =>  headers['Content-Length'] || reaponse.size,
+        'size#bytes' =>  headers['Content-Length'] || response.size,
         route_signature: env['ROUTE_SIGNATURE'],
         elapsed:         (Time.now - @request_start).to_f,
         request_id:      env['REQUEST_ID']
