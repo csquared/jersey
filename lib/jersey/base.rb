@@ -1,15 +1,11 @@
 require "sinatra/base"
 require 'sinatra/json'
 require 'json'
-require 'request_store'
 
-# jersey
-require 'jersey/http_errors'
-require 'jersey/middleware/request_id'
-require 'jersey/middleware/request_logger'
-require 'jersey/extensions/route_signature'
-require 'jersey/extensions/error_handler'
-require 'jersey/helpers/log'
+# Take over Sinatra's NotFound so we don't have to deal with the
+# not_found block and can raise our own NotFound error
+::Sinatra.send(:remove_const, :NotFound)
+::Sinatra.const_set(:NotFound, ::Jersey::HTTP::Errors::NotFound)
 
 module Jersey::API
   class Base < Sinatra::Base
@@ -27,5 +23,6 @@ module Jersey::API
 
     helpers Sinatra::JSON
     helpers Jersey::Helpers::Log
+    helpers Jersey::Helpers::Success
   end
 end
