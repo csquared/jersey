@@ -30,6 +30,7 @@ class ErrorsTest < ApiTest
     assert_equal(409, last_response.status)
     assert_equal('Conflict', json['error']['type'])
     assert_equal('bad', json['error']['message'])
+    assert(json['error']['request_id'])
   end
 
   def test_http_errors_500
@@ -37,6 +38,7 @@ class ErrorsTest < ApiTest
     assert_equal(500, last_response.status)
     assert_equal('InternalServerError', json['error']['type'])
     assert_equal('bad', json['error']['message'])
+    assert(json['error']['request_id'])
   end
 
   def test_http_errors_Undefined
@@ -44,5 +46,6 @@ class ErrorsTest < ApiTest
     assert_equal(500, last_response.status)
     assert_equal('RuntimeError', json['error']['type'])
     assert_equal('boom!', json['error']['message'])
+    assert(json['error']['request_id'])
   end
 end

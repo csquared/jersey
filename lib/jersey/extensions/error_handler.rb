@@ -21,6 +21,7 @@ module Jersey::Extensions
 
         json(error: {
           type: e.class.name.split('::').last,
+          request_id: env['REQUEST_ID'],
           message: e.message,
           backtrace: e.backtrace
         })
