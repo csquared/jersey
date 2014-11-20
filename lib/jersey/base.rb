@@ -12,8 +12,8 @@ module Jersey::API
     include Jersey::HTTP::Errors
 
     register Jersey::Extensions::RouteSignature
-    register Jersey::Extensions::ErrorHandler
 
+    use Jersey::Middleware::ErrorHandler
     use Rack::Deflater
     use Rack::ConditionalGet
     use Rack::ETag
@@ -24,5 +24,9 @@ module Jersey::API
     helpers Sinatra::JSON
     helpers Jersey::Helpers::Log
     helpers Jersey::Helpers::Success
+
+    set :dump_errors, false
+    set :raise_errors, true
+    set :show_exceptions, false
   end
 end
