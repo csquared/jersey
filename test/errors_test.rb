@@ -1,7 +1,7 @@
 require_relative 'helper'
 
 class ErrorsTest < ApiTest
-  class SimpleApi < Jersey::API::Base
+  class App < Jersey::API::Base
     get '/test-409' do
       raise Conflict, "bad"
     end
@@ -13,10 +13,6 @@ class ErrorsTest < ApiTest
     get '/test-runtime-error' do
       raise "boom!"
     end
-  end
-
-  def app
-    SimpleApi
   end
 
   def test_not_found
