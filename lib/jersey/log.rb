@@ -9,6 +9,11 @@ module Jersey
     include Logging::LogError
   end
 
+  class JsonLogger < JSONLogger
+    include Logging::LogTime
+    include Logging::LogError
+  end
+
   module LoggingSingleton
     attr_writer :logger
 
