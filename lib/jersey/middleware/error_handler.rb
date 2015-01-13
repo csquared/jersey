@@ -1,7 +1,8 @@
 module Jersey::Middleware
   class ErrorHandler
-    def initialize(app)
+    def initialize(app, options = {})
       @app = app
+      @include_backtrace = options[:include_backtrace]
     end
 
     def call(env)
@@ -24,11 +25,14 @@ module Jersey::Middleware
         body = {error: {
           type: e.class.name.split('::').last,
           request_id: env['REQUEST_ID'] || env['HTTP_REQUEST_ID'],
-          message: e.message,
-          backtrace: e.backtrace
-        }}.to_json
+          message: e.message
+        }}
 
-        [status, headers, [body]]
+        if @include_backtrace
+          body[:error][:backtrace] = e.backtrace
+        end
+
+        [status, headers, [body.to_json]]
       end
     end
   end
