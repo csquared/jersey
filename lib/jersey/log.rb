@@ -5,6 +5,7 @@ require 'jersey/logging/mixins'
 
 module Jersey
   class Logger < LogfmtLogger
+    include Logging::LogCaller
     include Logging::LogTime
     include Logging::LogError
   end
