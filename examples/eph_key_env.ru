@@ -11,6 +11,4 @@ class EnvAPI < Jersey::API::Base
   end
 end
 
-run Rack::URLMap.new(
-  '/' => EnvAPI
-)
+run EnvAPI

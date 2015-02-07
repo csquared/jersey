@@ -4,11 +4,15 @@ require 'jersey/vault_crypt'
 module Jersey::API
   # Ephemeral-Key P2P Msg to enable
   # secure ENV loading
-  class EphKeyEnv < Jersey::API::Base
+  class EphKeyEnv < Composable
     @@loaded = false
 
-    get '/pubkey' do
-      public_key
+    get '/pubkey/env' do
+      if @@loaded
+        raise BadRequest, "ENV already loaded"
+      else
+        public_key
+      end
     end
 
     post '/msg/env' do
@@ -31,6 +35,12 @@ module Jersey::API
         end
         @@loaded = true
         'OK'
+      end
+    end
+
+    if Config.test?
+      def self.reset!
+        @@loaded = @@rsa_key = @@public_key  = false
       end
     end
 
