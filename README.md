@@ -149,6 +149,22 @@ class API < Sinatra::Base
 end
 ```
 
+#### `Jersey::Middleware::AutoJson`
+
+Uses content type matching regex `/json/` or a request body that
+begins with a `{` to detect and parse json.  Exposes json
+via `request.body` and `params` so you can transparently
+accept form-encoded and json bodies.
+
+#### Usage
+Use as a Rack middleware
+
+```ruby
+class API < Sinatra::Base
+  use Jersey::Middleware::AutoJson
+end
+```
+
 #### `Jersey::Middleware::RequestID`
 
 Creates a random request id for every http request, stored both in thread local storage

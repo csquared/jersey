@@ -20,10 +20,12 @@ module Jersey::API
     use Jersey::Middleware::RequestID
     use Jersey::Middleware::RequestLogger
     use Jersey::Middleware::ErrorHandler
+    use Jersey::Middleware::AutoJson
 
     helpers Sinatra::JSON
     helpers Jersey::Helpers::Log
     helpers Jersey::Helpers::Success
+    helpers Jersey::Helpers::AutoJsonParams
 
     set :dump_errors, false
     set :raise_errors, true
