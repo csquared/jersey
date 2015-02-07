@@ -32,6 +32,8 @@ module Jersey::Middleware
           body[:error][:backtrace] = e.backtrace
         end
 
+        Jersey.log(e)
+
         [status, headers, [body.to_json]]
       end
     end
