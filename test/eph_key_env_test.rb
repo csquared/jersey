@@ -36,6 +36,7 @@ class SuccessTest < ApiTest
 
     get '/foo'
     assert_equal('bar', last_response.body)
+    ENV.delete('FOO')
   end
 
   def test_load_env_with_bad_pubkey

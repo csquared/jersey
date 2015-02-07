@@ -12,6 +12,7 @@ it easy to compose your own stack or use Jesery's compositions.
 
 ## Features
   - env-conf for easy ENV based configuration
+  - secure ENV loading mechanism
   - request context aware request logging
   - structured data loggers - json and logfmt
   - unified exception handling
@@ -95,6 +96,34 @@ Response:
 
 Unified, strucutred error handling. Notice how all we needed to do was raise `NotFound`
 and we get a 404 response code (in the server logs) and our error message as part of the JSON payload.
+
+### `Jersey::API::EphKeyEnv`
+
+Uses an ephemeral RSA key to expose endpoints that allow the server process
+to load an ENV using end-to-end encryption.
+
+#### Usage
+This is itself a Jersy API, which is a sinatra Base.
+
+That means you can mount it as a separate app in a `Rack::URLMap` or `Rack::Cascade`,
+or you can use it as a middleware.
+
+For example:
+```ruby
+class API < Sinatra::Base
+  use Jersey::API::EphKeyEnv
+end
+
+run Rack::Cascade.new([
+  Jersey::API::EphKeyEnv,
+  API
+])
+
+run Rack::URLMap.new(
+  '/eph/' => Jersey::API::EphKeyEnv,
+  '/' => API
+)
+```
 
 #### `Jersey::HTTP::Errors`
 
