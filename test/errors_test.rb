@@ -44,4 +44,16 @@ class ErrorsTest < ApiTest
     assert_equal('boom!', json['error']['message'])
     assert(json['error']['request_id'])
   end
+
+  def test_errors_are_logged
+    Jersey.logger.stream = StringIO.new
+    get '/test-500'
+    loglines = logs.lines
+    assert_equal(2, loglines.size)
+    logdata = Logfmt.parse(loglines[0])
+    assert(logdata['at'], 'started')
+    logdata = Logfmt.parse(loglines[1])
+    assert(logdata['at'], 'finished')
+    assert(logdata['status'], '500')
+  end
 end
