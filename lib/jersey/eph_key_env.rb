@@ -34,6 +34,9 @@ module Jersey::API
           ENV[key] = value
         end
         @@loaded = true
+        if @@quit_after_load
+          self.class.quit!
+        end
         'OK'
       end
     end
@@ -42,6 +45,10 @@ module Jersey::API
       def self.reset!
         @@loaded = @@rsa_key = @@public_key  = false
       end
+    end
+
+    def self.quit_after_load!
+      @@quit_after_load = true
     end
 
     helpers do
