@@ -51,6 +51,14 @@ module Jersey::API
       @@quit_after_load = true
     end
 
+    def self.one_time_load!(bind: '0.0.0.0', port: 80)
+      self.bind = bind
+      self.port = port
+      self.standalone!
+      self.quit_after_load!
+      self.run!
+    end
+
     helpers do
       def rsa_key
         @@rsa_key ||= OpenSSL::PKey::RSA.generate(2048)
