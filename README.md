@@ -114,6 +114,8 @@ class API < Sinatra::Base
   use Jersey::API::EphKeyEnv
 end
 
+Jersey::API::EphKeyEnv.standalone!
+
 run Rack::Cascade.new([
   Jersey::API::EphKeyEnv,
   API
@@ -124,6 +126,35 @@ run Rack::URLMap.new(
   '/' => API
 )
 ```
+
+If you want to load your env before doing anything else,
+you can use the `EphKeyEnv::quit_after_run!` method.
+
+Because the EphKeyStore is a Sinatra Base class, it
+is simple to also run it as a standalone webserver.
+
+```ruby
+require 'jersey'
+Jersey.setup
+
+require 'jersey/eph_key_env'
+
+# wait on port for secrets
+Jersey::API::EphKeyEnv.port = ENV['PORT'] || 8000
+
+# use all the nice Jersey middleware
+Jersey::API::EphKeyEnv.standalone!
+
+# close up after secrets are loaded
+Jersey::API::EphKeyEnv.quit_after_load!
+
+# run with the detected server
+Jersey::API::EphKeyEnv.run!
+
+# resume processing
+puts ENV["FOO"]
+```
+
 
 #### `Jersey::HTTP::Errors`
 
