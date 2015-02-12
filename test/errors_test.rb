@@ -49,10 +49,10 @@ class ErrorsTest < ApiTest
     Jersey.logger.stream = StringIO.new
     get '/test-500'
     loglines = logs.lines
-    assert_equal(2, loglines.size)
-    logdata = Logfmt.parse(loglines[0])
+    assert(loglines.size > 2)
+    logdata = Logfmt.parse(loglines.first)
     assert(logdata['at'], 'started')
-    logdata = Logfmt.parse(loglines[1])
+    logdata = Logfmt.parse(loglines.last)
     assert(logdata['at'], 'finished')
     assert(logdata['status'], '500')
   end

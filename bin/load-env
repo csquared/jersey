@@ -1,0 +1,56 @@
+#! /usr/bin/env ruby
+
+require 'uri'
+require 'net/http'
+require 'openssl'
+require 'json'
+require_relative '../lib/jersey/vault_crypt'
+
+unless ARGV[0] && ARGV[1]
+puts "
+  Usage:
+
+  load-env <file.json> <server>
+"
+exit 1
+end
+
+def error(response)
+  error = JSON.parse(response.body)['error']
+  puts "Error: #{error['message']}"
+end
+
+def req(http, request)
+  loop do
+    response = http.request(request)
+    case response.code.to_i
+    when 200
+      yield response
+      break
+    when 400..499
+      error(response)
+      break
+    else
+      error(response)
+      sleep 1
+    end
+  end
+end
+
+blob = File.read(ARGV[0])
+# make sure its json
+JSON.parse(blob)
+uri  = URI.parse(ARGV[1])
+http = Net::HTTP.new(uri.host, uri.port)
+request = Net::HTTP::Get.new("/pubkey/env")
+req(http, request) do |response|
+  public_key = response.body
+  rsa_key = OpenSSL::PKey::RSA.new(public_key.unpack("m0")[0])
+  cipher_json = VaultCrypt.encrypt(blob, [rsa_key.public_key])
+  request = Net::HTTP::Post.new("/msg/env")
+  request.body = cipher_json
+  req(http, request) do |response|
+    puts "ENV loaded"
+  end
+end
+

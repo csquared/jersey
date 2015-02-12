@@ -12,6 +12,7 @@ it easy to compose your own stack or use Jesery's compositions.
 
 ## Features
   - env-conf for easy ENV based configuration
+  - secure ENV loading mechanism
   - request context aware request logging
   - structured data loggers - json and logfmt
   - unified exception handling
@@ -95,6 +96,65 @@ Response:
 
 Unified, strucutred error handling. Notice how all we needed to do was raise `NotFound`
 and we get a 404 response code (in the server logs) and our error message as part of the JSON payload.
+
+### `Jersey::API::EphKeyEnv`
+
+Uses an ephemeral RSA key to expose endpoints that allow the server process
+to load an ENV using end-to-end encryption.
+
+#### Usage
+This is itself a Jersy API, which is a sinatra Base.
+
+That means you can mount it as a separate app in a `Rack::URLMap` or `Rack::Cascade`,
+or you can use it as a middleware.
+
+For example:
+```ruby
+class API < Sinatra::Base
+  use Jersey::API::EphKeyEnv
+end
+
+Jersey::API::EphKeyEnv.standalone!
+
+run Rack::Cascade.new([
+  Jersey::API::EphKeyEnv,
+  API
+])
+
+run Rack::URLMap.new(
+  '/eph/' => Jersey::API::EphKeyEnv,
+  '/' => API
+)
+```
+
+If you want to load your env before doing anything else,
+you can use the `EphKeyEnv::quit_after_run!` method.
+
+Because the EphKeyStore is a Sinatra Base class, it
+is simple to also run it as a standalone webserver.
+
+```ruby
+require 'jersey'
+Jersey.setup
+
+require 'jersey/eph_key_env'
+
+# wait on port for secrets
+Jersey::API::EphKeyEnv.port = ENV['PORT'] || 8000
+
+# use all the nice Jersey middleware
+Jersey::API::EphKeyEnv.standalone!
+
+# close up after secrets are loaded
+Jersey::API::EphKeyEnv.quit_after_load!
+
+# run with the detected server
+Jersey::API::EphKeyEnv.run!
+
+# resume processing
+puts ENV["FOO"]
+```
+
 
 #### `Jersey::HTTP::Errors`
 
