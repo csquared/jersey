@@ -2,7 +2,8 @@ module Jersey::Middleware
   class ErrorHandler
     def initialize(app, options = {})
       @app = app
-      @include_backtrace = options[:include_backtrace]
+      ib = options[:include_backtrace]
+      @include_backtrace = (ib.nil? && ENV['RACK_ENV'] == 'development') || ib
     end
 
     def call(env)
