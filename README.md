@@ -165,6 +165,25 @@ class API < Sinatra::Base
 end
 ```
 
+#### `Jersey::Helpers::AutoJsonParams`
+Merges sinatra params Hash with json data parsed by a rack middleware
+that has set `rack.json` on the rack env.
+
+If the parsed data is an array, merges by using the array index as a hash key.
+
+Json data gets precendence in naming collisions.
+
+#### Usage
+Use as a Sinatra Helper
+
+Note: works with any Rack middleware that populates `env['rack.json']`
+
+```ruby
+class API < Sinatra::Base
+  helpers Jersey::Helpers::AutoJsonParams
+end
+```
+
 #### `Jersey::Middleware::RequestID`
 
 Creates a random request id for every http request, stored both in thread local storage
