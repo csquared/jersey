@@ -156,12 +156,18 @@ begins with a `{` to detect and parse json.  Exposes json
 via `request.body` and `params` so you can transparently
 accept form-encoded and json bodies.
 
+Adds a `#json` method to the `Rack::Request` object.
+
 #### Usage
 Use as a Rack middleware
 
 ```ruby
 class API < Sinatra::Base
   use Jersey::Middleware::AutoJson
+
+  post '/test-json' do
+    request.json == env['rack.json']
+  end
 end
 ```
 
@@ -181,6 +187,10 @@ Note: works with any Rack middleware that populates `env['rack.json']`
 ```ruby
 class API < Sinatra::Base
   helpers Jersey::Helpers::AutoJsonParams
+
+  post "/test-array-params" do
+    params[0]
+  end
 end
 ```
 
