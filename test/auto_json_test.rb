@@ -17,6 +17,10 @@ class ErrorsTest < ApiTest
     post "/test-array-params" do
       params[0]
     end
+
+    post "/test-auto-parse-fail" do
+      request.body.read
+    end
   end
 
   def test_form_encoded
@@ -59,6 +63,12 @@ class ErrorsTest < ApiTest
     post('/test-array-params', ['foo', 'bar'].to_json)
     assert_equal(200, last_response.status)
     assert_equal("foo", last_response.body)
+  end
+
+  def test_passes_through_auto_parse_fails
+    post('/test-auto-parse-fail', "{ HAHA")
+    assert_equal(200, last_response.status)
+    assert_equal("{ HAHA", last_response.body)
   end
 
   def test_query_string_and_body

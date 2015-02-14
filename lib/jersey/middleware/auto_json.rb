@@ -22,14 +22,17 @@ module Jersey::Middleware
     def call(env)
       req = Rack::Request.new(env)
       type = req.media_type
-      if (type && type.match(@json_regex)) ||
-         ["{","["].include?(req.body.read(1))
+      if type && type.match(@json_regex)
+        # raise error if parsing declared json
         begin
-          req.body.rewind
           env['rack.json'] = @parser.call(req.body.read)
         rescue => ex
-          raise BadRequest, "json parse error: #{ex.message}"
+          raise BadRequest, "json parse error in AutoJson: #{ex.message}"
         end
+      elsif ["{","["].include?(req.body.read(1))
+        # make best effort to parse what looks like json
+        req.body.rewind
+        env['rack.json'] = @parser.call(req.body.read) rescue nil
       end
       req.body.rewind
       @app.call(env)
