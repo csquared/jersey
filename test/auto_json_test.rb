@@ -1,6 +1,6 @@
 require_relative 'helper'
 
-class ErrorsTest < ApiTest
+class AutoJsonTest < ApiTest
   class App < Jersey::API::Base
     post '/test-params' do
       "#{params['one']}:#{params['two']}"
