@@ -3,7 +3,7 @@ require_relative 'helper'
 class AutoJsonTest < ApiTest
   class App < Jersey::API::Base
     post '/test-params' do
-      "#{params['one']}:#{params['two']}"
+      "#{params[:one]}:#{params['two']}"
     end
 
     post '/test-json' do
