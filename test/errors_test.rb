@@ -1,7 +1,23 @@
 require_relative 'helper'
 
+module Jersey::Middleware
+  class MyMiddleware
+    def initialize(app)
+      @app = app
+    end
+    def call(env)
+      req = Rack::Request.new(env)
+      if req.path == '/test-400'
+        raise Jersey::HTTP::Errors::BadRequest, 'bad request'
+      end
+      @app.call(env)
+    end
+  end
+end
+
 class ErrorsTest < ApiTest
   class App < Jersey::API::Base
+    use Jersey::Middleware::MyMiddleware
     get '/test-409' do
       raise Conflict, "bad"
     end
@@ -11,7 +27,7 @@ class ErrorsTest < ApiTest
     end
 
     get '/test-400' do
-      raise BadRequest, "bad request"
+      raise "should not get here, should have stopped in middleware"
     end
 
     get '/test-runtime-error' do
