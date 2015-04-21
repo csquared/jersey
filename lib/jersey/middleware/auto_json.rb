@@ -27,7 +27,7 @@ module Jersey::Middleware
         begin
           env['rack.json'] = @parser.call(req.body.read)
         rescue => ex
-          raise BadRequest, "json parse error in AutoJson: #{ex.message}"
+          raise Jersey::HTTP::Errors::BadRequest, "json parse error in AutoJson: #{ex.message}"
         end
       elsif ["{","["].include?(req.body.read(1))
         # make best effort to parse what looks like json

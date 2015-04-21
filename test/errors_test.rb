@@ -10,6 +10,10 @@ class ErrorsTest < ApiTest
       raise InternalServerError, "bad"
     end
 
+    get '/test-400' do
+      raise BadRequest, "bad request"
+    end
+
     get '/test-runtime-error' do
       raise "boom!"
     end
@@ -19,6 +23,14 @@ class ErrorsTest < ApiTest
     get '/not-found'
     assert_equal(404, last_response.status)
     assert_equal('NotFound', json['error']['type'])
+  end
+
+  def test_http_errors_400
+    get '/test-400'
+    assert_equal(400, last_response.status)
+    assert_equal('BadRequest', json['error']['type'])
+    assert_equal('bad request', json['error']['message'])
+    assert(json['error']['request_id'])
   end
 
   def test_http_errors_409
