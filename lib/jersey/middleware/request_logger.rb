@@ -15,7 +15,7 @@ module Jersey::Middleware
         at:              "start",
         request_id:      env['REQUEST_ID'],
         method:          request.request_method,
-        path:            request.path_info,
+        path:            request.path,
         content_type:    request.content_type,
         content_length:  request.content_length
       }
@@ -24,7 +24,7 @@ module Jersey::Middleware
       @logger.log(
         at:              "finish",
         method:          request.request_method,
-        path:            request.path_info,
+        path:            request.path,
         status:          status,
         content_length:  headers['Content-Length'],
         route_signature: env['ROUTE_SIGNATURE'],
